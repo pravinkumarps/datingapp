@@ -22,15 +22,15 @@ export class AccountService {
         map((response: User) => {
           const user = response;
           if (user) {
-            localStorage.setItem('user', JSON.stringify(user));
-            this.currentUserSource.next(user);
+            this.setCurrentUser(user);
           }
         })
       );
   }
 
-  setCurrentUser(user: User){
+  setCurrentUser(user: User) {
     this.currentUserSource.next(user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   logout() {
@@ -38,13 +38,12 @@ export class AccountService {
     this.currentUserSource.next(null);
   }
 
-  register(model: any){
-    return this.httpclient.post(this.baseUrl+'account/register',model)
+  register(model: any) {
+    return this.httpclient.post(this.baseUrl + 'account/register', model)
       .pipe(
-        map((user: User)=> {
-          if(user) {
-            localStorage.setItem('user',JSON.stringify(user));
-            this.currentUserSource.next(user);
+        map((user: User) => {
+          if (user) {
+            this.setCurrentUser(user);
           }
         })
       )
